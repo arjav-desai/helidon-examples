@@ -37,6 +37,7 @@
         <module>coffee-shop-assistant-se</module>
         <module>coffee-shop-assistant-mp</module>
         <module>coffee-shop-assistant-se-coherence</module>
+        <module>coffee-shop-assistant-se-oracle</module>
     </modules>
 
     <description>
