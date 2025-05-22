@@ -1,0 +1,50 @@
+#
+# Copyright (c) 2025 Oracle and/or its affiliates.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+server:
+  host: "0.0.0.0"
+  port: 8080
+
+langchain4j:
+  ollama:
+    chat-model:
+      enabled: true
+      model-name: qwen3
+      # required, even though its default
+      base-url: http://localhost:11434
+  oracle:
+    embedding-store:
+      enabled: true
+      # since we are not specifying any data-source here, Unnamed service which provides Datasource is used i.e. DataSourceFactory
+      exact-search: false
+      embedding-table:
+        name: my_embedding_table
+        create-option: CREATE_OR_REPLACE
+  rag:
+    embedding-store-content-retriever:
+      enabled: true
+      max-results: 10
+      min-score: 0.6
+      # this is how you tell our RAG integration to use oracle embedding store
+      embedding-store: oracle
+app:
+  menu-items: "data/menu.json"
+db:
+  # Using sys/system account: ORA-43853: VECTOR type cannot be used in non-automatic segment space management tablespace "SYSTEM"
+  # Using pdbadmin: doesn't have rights to create tables
+  # So we create a custom user and then create tables with pdb and not sid
+  userName: vector
+  password: vector
+  url: jdbc:oracle:thin:@localhost:1521/freepdb1
